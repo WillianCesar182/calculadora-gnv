@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora GNV</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+<body>
+
+<h2>Calculadora GNV</h2>
+
+<label for="tipo">Tipo de veículo:</label>
+<select id="tipo">
+  <option value="carros">Carro</option>
+  <option value="motos">Moto</option>
+  <option value="caminhoes">Caminhão</option>
+</select>
+
+<label for="marca">Marca:</label>
+<select id="marca"></select>
+
+<label for="modelo">Modelo:</label>
+<select id="modelo"></select>
+
+<label for="ano">Ano:</label>
+<select id="ano"></select>
+
+<label for="cenario">Objetivo:</label>
+<select id="cenario">
+  <option value="instalar">Quero instalar GNV</option>
+  <option value="ja-tem">Já tenho GNV</option>
+</select>
+
+<button onclick="consultarValor()">Consultar Valor FIPE</button>
+<div id="resultado"></div>
+
+<div id="form-cenario1" style="display: none;">
+  <h3>Informações para cálculo comparativo</h3>
+  <label>Quantos km você roda por mês?</label>
+  <input type="number" id="km_mes">
+  <label>Consumo na gasolina (km/l):</label>
+  <input type="number" id="consumo_gasolina" value="10.7">
+  <label>Consumo no etanol (km/l):</label>
+  <input type="number" id="consumo_etanol" value="7.5">
+  <label>Consumo no GNV (km/m³):</label>
+  <input type="number" id="consumo_gnv" value="13.2">
+  <label>Preço da gasolina (R$/litro):</label>
+  <input type="number" id="preco_gasolina" step="0.01">
+  <label>Preço do etanol (R$/litro):</label>
+  <input type="number" id="preco_etanol" step="0.01">
+  <label>Preço do GNV (R$/m³):</label>
+  <input type="number" id="preco_gnv" step="0.01">
+  <label>Valor da instalação do GNV (R$):</label>
+  <input type="number" id="custo_instalacao">
+  <button onclick="calcularEconomia()">Calcular Economia</button>
+  <div id="resultadoCenario1"></div>
+  <canvas id="graficoEconomia"></canvas>
+</div>
+
+<div id="form-cenario2" style="display: none;">
+  <h3>Informações para análise de economia atual</h3>
+  <label>Quantos km você roda por mês?</label>
+  <input type="number" id="km_mes2">
+  <label>Consumo no GNV (km/m³):</label>
+  <input type="number" id="consumo_gnv2" value="13.2">
+  <label>Consumo na gasolina (km/l):</label>
+  <input type="number" id="consumo_gasolina2" value="10.7">
+  <label>Consumo no etanol (km/l):</label>
+  <input type="number" id="consumo_etanol2" value="7.5">
+  <label>Preço do GNV (R$/m³):</label>
+  <input type="number" id="preco_gnv2" step="0.01">
+  <label>Preço da gasolina (R$/litro):</label>
+  <input type="number" id="preco_gasolina2" step="0.01">
+  <label>Preço do etanol (R$/litro):</label>
+  <input type="number" id="preco_etanol2" step="0.01">
+  <button onclick="calcularEconomiaGNVAtual()">Calcular</button>
+  <div id="resultadoCenario2" style="margin-top: 20px;"></div>
+  <canvas id="graficoEconomia2"></canvas>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
