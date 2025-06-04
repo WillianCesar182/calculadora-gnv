@@ -140,6 +140,8 @@ function calcularEconomiaGNVAtual() {
   const ipvaGasolina = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaNormal * 5;
   const ipvaEtanol = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaNormal * 5;
   const ipvaGNV = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaComGNV * 5;
+  
+  const economiaIPVATotal = ipvaGasolina - ipvaGNV;
 
   const economiaTotalGasolina = economia5AnosGasolina + (ipvaGasolina - ipvaGNV);
   const economiaTotalEtanol = economia5AnosEtanol + (ipvaEtanol - ipvaGNV);
