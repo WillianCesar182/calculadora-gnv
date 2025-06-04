@@ -162,6 +162,7 @@ function calcularEconomiaGNVAtual() {
     <ul>
       <li>💰 Economia GNV vs Gasolina: <strong>R$ ${economia5AnosGasolina.toFixed(2)}</strong></li>
       <li>💰 Economia GNV vs Etanol: <strong>R$ ${economia5AnosEtanol.toFixed(2)}</strong></li>
+      <li>🏷️ Economia apenas com IPVA em 5 anos: <strong>R$ ${(ipvaGasolina - ipvaGNV).toFixed(2)}</strong></li>
       <li>🎁 Economia total com IPVA: GNV vs Gasolina: <strong>R$ ${economiaTotalGasolina.toFixed(2)}</strong></li>
       <li>🎁 Economia total com IPVA: GNV vs Etanol: <strong>R$ ${economiaTotalEtanol.toFixed(2)}</strong></li>
     </ul>
