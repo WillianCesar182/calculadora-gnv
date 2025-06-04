@@ -110,7 +110,6 @@ async function consultarValor() {
   document.getElementById("form-cenario2").style.display = cenario === "ja-tem" ? "block" : "none";
 }
 
-// CENÁRIO 2 – Já tenho GNV
 function calcularEconomiaGNVAtual() {
   const kmMes = parseFloat(document.getElementById("km_mes2").value);
   const consumoGNV = parseFloat(document.getElementById("consumo_gnv2").value);
@@ -132,6 +131,19 @@ function calcularEconomiaGNVAtual() {
   const economiaEtanol = gastoEtanol - gastoGNV;
   const economiaIPVA = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaNormal - dadosVeiculo.ipvaComGNV;
 
+  const gasto5AnosGasolina = gastoGasolina * 12 * 5;
+  const gasto5AnosEtanol = gastoEtanol * 12 * 5;
+  const gasto5AnosGNV = gastoGNV * 12 * 5;
+  const economia5AnosGasolina = gasto5AnosGasolina - gasto5AnosGNV;
+  const economia5AnosEtanol = gasto5AnosEtanol - gasto5AnosGNV;
+
+  const ipvaGasolina = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaNormal * 5;
+  const ipvaEtanol = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaNormal * 5;
+  const ipvaGNV = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaComGNV * 5;
+
+  const economiaTotalGasolina = economia5AnosGasolina + (ipvaGasolina - ipvaGNV);
+  const economiaTotalEtanol = economia5AnosEtanol + (ipvaEtanol - ipvaGNV);
+
   const resultado = `
     <h4>Resultado</h4>
     <p><strong>Gasto mensal com GNV:</strong> R$ ${gastoGNV.toFixed(2)}</p>
@@ -145,11 +157,18 @@ function calcularEconomiaGNVAtual() {
         ? `<p style="color: green;"><strong>💡 Dica:</strong> Você já economiza R$ ${economiaIPVA.toFixed(2)} por ano só com o desconto no IPVA.</p>`
         : `<p style="color: gray;">IPVA já é isento para este veículo.</p>`
     }
+    <p><em>🖱️ Passe o mouse sobre as barras para ver a economia em 5 anos. 📱 Em celulares, veja o resumo abaixo do gráfico.</em></p>
+    <h4>Resumo da Economia em 5 Anos</h4>
+    <ul>
+      <li>💰 Economia GNV vs Gasolina: <strong>R$ ${economia5AnosGasolina.toFixed(2)}</strong></li>
+      <li>💰 Economia GNV vs Etanol: <strong>R$ ${economia5AnosEtanol.toFixed(2)}</strong></li>
+      <li>🎁 Economia total com IPVA: GNV vs Gasolina: <strong>R$ ${economiaTotalGasolina.toFixed(2)}</strong></li>
+      <li>🎁 Economia total com IPVA: GNV vs Etanol: <strong>R$ ${economiaTotalEtanol.toFixed(2)}</strong></li>
+    </ul>
   `;
 
   document.getElementById("resultadoCenario2").innerHTML = resultado;
 
-  // GRÁFICO CENÁRIO 2
   if (window.graficoEconomia2 && typeof window.graficoEconomia2.destroy === "function") {
     window.graficoEconomia2.destroy();
   }
@@ -158,12 +177,12 @@ function calcularEconomiaGNVAtual() {
   window.graficoEconomia2 = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: ["GNV", "Gasolina", "Etanol"],
+      labels: ["Gasolina", "Etanol", "GNV"],
       datasets: [
         {
-          label: "Gasto mensal estimado (R$)",
-          data: [gastoGNV, gastoGasolina, gastoEtanol],
-          backgroundColor: ["#27ae60", "#c0392b", "#f39c12"],
+          label: "Gasto acumulado em 5 anos (R$)",
+          data: [gasto5AnosGasolina, gasto5AnosEtanol, gasto5AnosGNV],
+          backgroundColor: ["#c0392b", "#f39c12", "#27ae60"],
         },
       ],
     },
@@ -172,14 +191,27 @@ function calcularEconomiaGNVAtual() {
       plugins: {
         title: {
           display: true,
-          text: "Comparativo de gasto mensal",
+          text: "Comparativo de gasto acumulado em 5 anos",
         },
         legend: { display: false },
+        tooltip: {
+          callbacks: {
+            afterBody: function (context) {
+              const label = context[0].label;
+              if (label === "GNV") {
+                return [
+                  `💸 Economia vs Gasolina: R$ ${economia5AnosGasolina.toFixed(2)}`,
+                  `💸 Economia vs Etanol: R$ ${economia5AnosEtanol.toFixed(2)}`,
+                ];
+              }
+            },
+          },
+        },
         datalabels: {
           color: "#000",
           anchor: "end",
           align: "top",
-          formatter: (value) => `R$ ${value.toFixed(2)}`,
+          formatter: (value) => `R$ ${value.toFixed(0)}`,
         },
       },
       scales: {
