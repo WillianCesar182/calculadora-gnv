@@ -232,7 +232,8 @@ function calcularEconomia() {
     <p><strong>Gasto mensal com etanol:</strong> R$ ${gastoEtanol.toFixed(2)}</p>
     <p><strong>Gasto mensal com GNV:</strong> R$ ${gastoGNV.toFixed(2)}</p>
     <p><strong>Combustível mais econômico:</strong> ${maisEconomico}</p>
-    <p><strong>Economia mensal com GNV:</strong> R$ ${economiaMensal.toFixed(2)}</p>
+    <p><strong>Economia mensal GNV vs Gasolina:</strong> R$ ${(gastoGasolina - gastoGNV).toFixed(2)}</p>
+    <p><strong>Economia mensal GNV vs Etanol:</strong> R$ ${(gastoEtanol - gastoGNV).toFixed(2)}</p>
     ${mensagemRetorno}
     <p><strong>Economia anual no IPVA (estimada):</strong> R$ ${economiaIPVA.toFixed(2)}</p>
     ${economiaIPVA > 0
@@ -304,13 +305,21 @@ function calcularEconomia() {
     },
     plugins: [ChartDataLabels],
   });
-
+  const ipvaGasolina = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaNormal * 5;
+  const ipvaEtanol = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaNormal * 5;
+  const ipvaGNV = dadosVeiculo.ipvaIsento ? 0 : dadosVeiculo.ipvaComGNV * 5;
+  
+  const economiaIPVAGasolina = ipvaGasolina - ipvaGNV;
+  const economiaIPVAEtanol = ipvaEtanol - ipvaGNV;
+  
   const resumoComparativo = `
     <h4>Resumo da Economia em 5 Anos</h4>
     <ul>
       <li>💰 Economia GNV vs Gasolina: <strong>R$ ${economia5AnosGasolina.toFixed(2)}</strong></li>
       <li>💰 Economia GNV vs Etanol: <strong>R$ ${economia5AnosEtanol.toFixed(2)}</strong></li>
       ${economiaIPVATotal > 0 ? `<li>🎁 Economia com IPVA: <strong>R$ ${economiaIPVATotal.toFixed(2)}</strong></li>` : ""}
+      <li>🎁 Economia com desconto de IPVA: GNV vs Gasolina: <strong>R$ ${economiaIPVAGasolina.toFixed(2)}</strong></li>
+      <li>🎁 Economia com desconto de IPVA: GNV vs Etanol: <strong>R$ ${economiaIPVAEtanol.toFixed(2)}</strong></li>
     </ul>
   `;
 
